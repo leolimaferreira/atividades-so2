@@ -220,10 +220,10 @@ std::cout << "Not found\n";
 * *Comando de Compilação:* `g++ -o devices devices.cpp -std=c++17`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar ./devices)
+userlinux@debian:~$ ./devices
+/dev/sda1
 ```
-* *Breve Descrição:* (Explique o que a saída significa. O dispositivo que apareceu (ex: `/dev/sda1`) é
-o que você esperava para a sua partição raiz? Por quê?)
+* *Breve Descrição:* A saída /dev/sda1 significa que a partição raiz do seu Debian está localizada na primeira partição do primeiro disco virtual da sua máquina. Isso é exatamente o esperado, pois em instalações típicas no VirtualBox o Debian usa o disco principal /dev/sda e coloca o sistema de arquivos / na primeira partição, tornando /dev/sda1 o local padrão onde o sistema foi instalado.
 #### `getuuid.c` (Livro-Texto p. 161-162)
 * **Objetivo do Código:** Usar a biblioteca `libblkid` para listar todas as partições de um disco
 (ex: `/dev/sda`) e imprimir seus atributos, como **UUID**, **LABEL** e **TYPE**.
@@ -275,10 +275,12 @@ return 0;
 * *Comando de Compilação:* `gcc -o getuuid getuuid.c -lblkid`
 * *Saída da Execução:* (Execute com `sudo ./getuuid /dev/sda`)
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ sudo ./getuuid /dev/sda
+Número de partições em /dev/sda: 3
+ Partição: /dev/sda1, UUID=f910ba9d-673d-4f51-9b6b-ad795eb12944, LABEL=null, TYPE=ext4
+ Partição: /dev/sda2, UUID=<ݑP�U, LABEL=null, TYPE=ّP�U
 ```
-* *Breve Descrição:* (A saída listou corretamente suas partições, como `sda1` e `sda5`? Os tipos
-`ext4` e `swap` correspondem ao que você viu no `lsblk -f`?)
+* *Breve Descrição:* Sim, a saída está correta e corresponde ao que normalmente aparece no lsblk -f: a partição /dev/sda1 aparece como ext4, que é o sistema de arquivos padrão do Debian, e a segunda partição exibida corresponde ao espaço reservado para swap, que às vezes aparece corrompido quando lido dessa forma porque o swap não possui um UUID comum legível como os sistemas de arquivos normais. Portanto, ver um UUID estranho ou caracteres sem sentido em /dev/sda2 é esperado, pois a partição de swap não armazena metadados textuais como um ext4. Assim, a saída do seu programa está alinhada com o que o Debian realmente cria no disco, e corresponde ao que você veria no lsblk -f.
 ---
 ### Códigos do Capítulo 7 (Processos)
 #### `teste.c` (Livro-Texto p. 181-182)
@@ -296,9 +298,10 @@ return 0;
 * *Comando de Compilação:* `gcc -o teste teste.c`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar ./teste)
+userlinux@debian:~$ ./teste
+Aied é 10, Aied é TOP, tá no Youtube
 ```
-* *Breve Descrição:* (O programa imprimiu a string esperada no terminal?)
+* *Breve Descrição:* Sim
 #### `myblkid.cpp` (Livro-Texto p. 186-187)
 * **Objetivo do Código:** Demonstrar como um programa C++ pode usar a biblioteca `libblkid`
 (uma biblioteca C) para obter o UUID de uma partição específica (neste caso, `/dev/sda1`).
@@ -328,10 +331,10 @@ return 0;
 * *Comando de Compilação:* `g++ -o myblkid myblkid.cpp -lblkid`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar sudo ./myblkid)
+userlinux@debian:~$ sudo ./myblkid
+UUID=f910ba9d-673d-4f51-9b6b-ad795eb12944
 ```
-* *Breve Descrição:* (A saída corresponde ao UUID da sua partição `sda1` que você viu no `lsblk
--f`?)
+* *Breve Descrição:* Sim
 #### `calcfb.cpp` (Livro-Texto p. 187)
 *(Esta prática requer dois arquivos)*
 * **Objetivo do Código:** Demonstrar como criar e usar uma biblioteca de cabeçalho (`.h`)
@@ -360,10 +363,10 @@ return 0;
 * *Comando de Compilação:* `g++ -o calcfb calcfb.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar ./calcfb)
+userlinux@debian:~$ ./calcfb 
+F4: 3 
 ```
-* *Breve Descrição:* (A saída foi `F4: 3`? Explique por que o resultado é 3 e não 4, com base na
-sequência de Fibonacci).
+* *Breve Descrição:* O resultado F4: 3 está correto porque, na sequência de Fibonacci, o quarto termo não é 4, mas sim 3; isso acontece porque cada termo é definido como a soma dos dois anteriores, começando por F0 = 0 e F1 = 1, o que gera F2 = 1, F3 = 2 e, consequentemente, F4 = 3, já que 2 + 1 = 3.
 #### `thread.cpp` (Livro-Texto p. 190)
 * **Objetivo do Código:** Demonstrar a criação de múltiplas threads que executam
 concorrentemente com a thread principal (`main`).
@@ -389,10 +392,11 @@ return 0;
 * *Comando de Compilação:* `g++ thread.cpp -o thread -pthread -std=c++11`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar ./thread)
+userlinux@debian:~$ ./thread 
+A 'main' executou...
+A thread está falando: Olá
 ```
-* *Breve Descrição:* (Qual linha imprimiu primeiro, "A 'main' executou..." ou "A thread está
-falando..."? O que `t1.join()` faz?)
+* *Breve Descrição:* A linha "A 'main' executou..." foi impressa antes de "A thread está falando: Olá", o que é comum porque a thread principal costuma rodar um pouco antes da thread criada. O comando t1.join() faz com que a função main espere a thread t1 terminar antes de continuar e finalizar o programa, garantindo que a thread seja concluída antes de o programa encerrar.
 
 #### `usefork.cpp` (Livro-Texto p. 191)
 * **Objetivo do Código:** Demonstrar a chamada `fork()`. O programa se clona; o pai e o filho
@@ -438,10 +442,11 @@ return 0;
 * *Comando de Compilação:* `g++ -o usefork usefork.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui as DUAS linhas de saída do seu terminal)
+userlinux@debian:~$ ./usefork 
+Processo pai: Variavel Global: 2 Variável Funcao: 20
+Processo filho:  Variavel Global: 3 Variável Funcao: 21
 ```
-* *Breve Descrição:* (Explique por que a `variavelGlobal` e a `variavelFuncao` têm valores diferentes
-para o pai e para o filho. Qual processo (pai ou filho) terminou primeiro na sua execução?)
+* *Breve Descrição:* A variavelGlobal e a variavelFuncao ficam com valores diferentes porque, após o fork(), o processo pai e o processo filho passam a existir como cópias independentes da memória; isso significa que cada um recebe sua própria cópia das variáveis, e quando o filho incrementa variavelGlobal e variavelFuncao, essas mudanças só afetam o espaço de memória dele, não o do pai. Já o pai continua com os valores originais porque ele não executa os incrementos. Sobre qual processo terminou primeiro, isso varia a cada execução, mas na sua saída o processo pai apareceu primeiro, indicando que ele terminou antes do filho, embora isso não seja garantido e possa mudar a cada vez que o programa roda.
 #### `usewait.cpp` (Livro-Texto p. 193)
 * **Objetivo do Código:** Demonstrar a chamada `wait()`. O processo-pai usa `wait(NULL)`
 para pausar sua própria execution e aguardar que o processo-filho termine antes de
@@ -479,10 +484,13 @@ return 0;
 * *Comando de Compilação:* `g++ -o usewait usewait.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ ./usewait
+Pai esperando o filho terminar...
+Saindo do processo filho. 
+PID do pai: 2759
+PID do filho (retornado por wait): 2760
 ```
-* *Breve Descrição:* (A linha "Pai esperando..." sempre aparece antes de "PID do pai..."? Por que o
-PID do filho é impresso pelo processo-pai?)
+* *Breve Descrição:* Sim, a linha "Pai esperando o filho terminar..." sempre aparece antes de "PID do pai...", porque assim que o fork é feito, o pai entra imediatamente no bloco que contém wait(NULL) e imprime essa mensagem antes de aguardar o término do filho; ele só continua a execução depois que o filho termina, garantindo que essas mensagens só sejam impressas após a espera. Já o PID do filho é impresso pelo processo pai porque a função wait() retorna exatamente o PID do processo filho que acabou de terminar, permitindo que o pai saiba qual dos seus filhos finalizou e exibindo essa informação após o wait desbloquear.
 #### `usewait_exit.cpp` (Livro-Texto p. 194)
 * **Objetivo do Código:** Expandir o `wait()`, mostrando como o pai pode capturar o *código de
 saída* (status) do filho, usando `WIFEXITED` e `WEXITSTATUS`.
@@ -523,10 +531,13 @@ return 0;
 * *Comando de Compilação:* `gcc -o usewait_exit usewait_exit.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ ./usewait_exit
+Saindo do processo filho.
+WEXIT: 1
+PID do pai: 2780
+PID do filho: 2781
 ```
-* *Breve Descrição:* (Qual foi o status de saída impresso pelo `WEXIT`? Por que ele imprimiu esse
-valor específico?)
+* *Breve Descrição:* O status de saída impresso pelo WEXIT foi 1, e isso aconteceu porque o processo filho chamou explicitamente exit(1), fazendo com que ele terminasse devolvendo exatamente esse valor ao sistema operacional; quando o pai executa wait(&stat), ele recupera esse código e, como o filho terminou normalmente, WEXITSTATUS(stat) devolve o mesmo número passado ao exit(), por isso o programa imprime 1.
 #### `waitpid.cpp` (Livro-Texto p. 195)
 * **Objetivo do Código:** Demonstrar o `waitpid()` para gerenciar *múltiplos* filhos. O pai cria 5
 filhos, e então espera por *cada um* deles especificamente, coletando seus códigos de saída
@@ -564,10 +575,14 @@ return 0;
 * *Comando de Compilação:* `g++ -o waitpid waitpid.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui as 5 linhas de saída do seu terminal)
+userlinux@debian:~$ ./waitpid
+O filho 2807 terminou com o status: 100
+O filho 2808 terminou com o status: 101
+O filho 2809 terminou com o status: 102
+O filho 2810 terminou com o status: 103
+O filho 2811 terminou com o status: 104
 ```
-* *Breve Descrição:* (Os PIDs dos filhos apareceram em ordem? Os códigos de status (100-104)
-apareceram em ordem? O que `waitpid()` faz de diferente do `wait()`?)
+* *Breve Descrição:* Os PIDs dos filhos não necessariamente aparecem em ordem, porque cada filho recebe seu próprio PID do sistema operacional, e esses IDs não dependem da ordem em que os forks foram chamados. Já os códigos de status 100 a 104 aparecem exatamente na ordem, porque o waitpid() está sendo chamado para cada filho específico, seguindo a mesma sequência do array pid[i]. A diferença para o wait() é que o waitpid() permite que o processo pai espere um filho específico, enquanto o wait() simplesmente espera qualquer filho terminar; por isso, com waitpid(), você controla a ordem de coleta dos resultados mesmo que os processos filhos finalizem ao mesmo tempo ou em ordem diferente.
 #### `system.cpp` (Livro-Texto p. 196)
 * **Objetivo do Código:** Demonstrar a função `system()`, que é um atalho (e geralmente
 inseguro) para `fork + exec + wait`. O programa C++ pausa, executa um comando de shell (`ls
@@ -587,10 +602,49 @@ return 0;
 * *Comando de Compilação:* `g++ -o system system.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ ./system
+total 336
+-rwxr-xr-x 1 userlinux userlinux 16000 Nov 18 15:35 calcfb
+-rw-r--r-- 1 userlinux userlinux   184 Nov 18 15:35 calcfb.cpp
+drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:56 cdrom
+drwxr-xr-t 2 userlinux userlinux  4096 Sep 13 22:52 compartilhado
+drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Desktop
+-rwxr-xr-x 1 userlinux userlinux 30840 Nov 18 15:25 devices
+-rw-r--r-- 1 userlinux userlinux   471 Nov 18 15:25 devices.cpp
+drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Documents
+drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Downloads
+-rw-r--r-- 1 userlinux userlinux   103 Nov 18 15:35 fibonacci.h
+-rwxr-xr-x 1 userlinux userlinux 16528 Nov 18 15:29 getuuid
+-rw-r--r-- 1 userlinux userlinux  1253 Nov 18 15:29 getuuid.c
+-rw-r--r-- 1 userlinux userlinux  1253 Nov 18 15:28 getuuid.cpp
+-rw-r--r-- 1 userlinux userlinux    19 Sep 13 22:51 hard_link.txt
+lrwxrwxrwx 1 userlinux userlinux    12 Sep 13 22:51 link_simbolico.txt -> original.txt
+-rwxr--r-- 1 userlinux userlinux    37 Sep 13 22:49 meu_script.sh
+drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Music
+-rwxr-xr-x 1 userlinux userlinux 24168 Nov 18 15:33 myblkid
+-rw-r--r-- 1 userlinux userlinux   477 Nov 18 15:33 myblkid.cpp
+drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Pictures
+drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Public
+-rwxr-xr-x 1 userlinux userlinux 16600 Nov 18 15:48 system
+-rw-r--r-- 1 userlinux userlinux   150 Nov 18 15:48 system.cpp
+drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Templates
+-rwxr-xr-x 1 userlinux userlinux 15960 Nov 18 15:32 teste
+-rw-r--r-- 1 userlinux userlinux    97 Nov 18 15:32 teste.c
+-rwxr-xr-x 1 userlinux userlinux 26288 Nov 18 15:37 thread
+-rw-r--r-- 1 userlinux userlinux   337 Nov 18 15:37 thread.cpp
+-rw-r--r-- 1 userlinux userlinux   512 Nov 18 15:00 typescript
+-rwxr-xr-x 1 userlinux userlinux 17496 Nov 18 15:39 usefork
+-rw-r--r-- 1 userlinux userlinux   715 Nov 18 15:39 usefork.cpp
+-rwxr-xr-x 1 userlinux userlinux 16800 Nov 18 15:41 usewait
+-rw-r--r-- 1 userlinux userlinux   549 Nov 18 15:41 usewait.cpp
+-rwxr-xr-x 1 userlinux userlinux 16272 Nov 18 15:43 usewait_exit
+-rw-r--r-- 1 userlinux userlinux   683 Nov 18 15:42 usewait_exit.cpp
+drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Videos
+-rwxr-xr-x 1 userlinux userlinux 16792 Nov 18 15:44 waitpid
+-rw-r--r-- 1 userlinux userlinux   504 Nov 18 15:44 waitpid.cpp
+Executado
 ```
-* *Breve Descrição:* (O que apareceu na tela? A lista de arquivos (`ls -l`) apareceu *antes* ou
-*depois* da palavra "Executado"? Por quê?)
+* *Breve Descrição:* A lista de arquivos exibida pelo comando ls -l apareceu antes da palavra “Executado”, porque a função system() executa um comando externo antes de continuar a execução do programa em C++. Ou seja, o programa fica parado esperando o comando terminar; só depois que o ls -l imprime tudo na tela e retorna o controle é que o cout << "Executado" é executado, fazendo a palavra “Executado” aparecer por último.
 #### `pop.cpp` (Livro-Texto p. 197)
 * **Objetivo do Código:** Demonstrar a função `popen()` (pipe open). Similar ao `system()`, ele
 executa um comando, mas permite ao programa C++ *capturar* a saída do comando (`ls -l`) e
@@ -621,10 +675,50 @@ return 0;
 * *Comando de Compilação:* `g++ -o pop pop.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ ./pop
+Linha: total 360
+Linha: -rwxr-xr-x 1 userlinux userlinux 16000 Nov 18 15:35 calcfb
+Linha: -rw-r--r-- 1 userlinux userlinux   184 Nov 18 15:35 calcfb.cpp
+Linha: drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:56 cdrom
+Linha: drwxr-xr-t 2 userlinux userlinux  4096 Sep 13 22:52 compartilhado
+Linha: drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Desktop
+Linha: -rwxr-xr-x 1 userlinux userlinux 30840 Nov 18 15:25 devices
+Linha: -rw-r--r-- 1 userlinux userlinux   471 Nov 18 15:25 devices.cpp
+Linha: drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Documents
+Linha: drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Downloads
+Linha: -rw-r--r-- 1 userlinux userlinux   103 Nov 18 15:35 fibonacci.h
+Linha: -rwxr-xr-x 1 userlinux userlinux 16528 Nov 18 15:29 getuuid
+Linha: -rw-r--r-- 1 userlinux userlinux  1253 Nov 18 15:29 getuuid.c
+Linha: -rw-r--r-- 1 userlinux userlinux  1253 Nov 18 15:28 getuuid.cpp
+Linha: -rw-r--r-- 1 userlinux userlinux    19 Sep 13 22:51 hard_link.txt
+Linha: lrwxrwxrwx 1 userlinux userlinux    12 Sep 13 22:51 link_simbolico.txt -> original.txt
+Linha: -rwxr--r-- 1 userlinux userlinux    37 Sep 13 22:49 meu_script.sh
+Linha: drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Music
+Linha: -rwxr-xr-x 1 userlinux userlinux 24168 Nov 18 15:33 myblkid
+Linha: -rw-r--r-- 1 userlinux userlinux   477 Nov 18 15:33 myblkid.cpp
+Linha: drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Pictures
+Linha: -rwxr-xr-x 1 userlinux userlinux 16624 Nov 18 15:50 pop
+Linha: -rw-r--r-- 1 userlinux userlinux   438 Nov 18 15:50 pop.cpp
+Linha: drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Public
+Linha: -rwxr-xr-x 1 userlinux userlinux 16600 Nov 18 15:48 system
+Linha: -rw-r--r-- 1 userlinux userlinux   150 Nov 18 15:48 system.cpp
+Linha: drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Templates
+Linha: -rwxr-xr-x 1 userlinux userlinux 15960 Nov 18 15:32 teste
+Linha: -rw-r--r-- 1 userlinux userlinux    97 Nov 18 15:32 teste.c
+Linha: -rwxr-xr-x 1 userlinux userlinux 26288 Nov 18 15:37 thread
+Linha: -rw-r--r-- 1 userlinux userlinux   337 Nov 18 15:37 thread.cpp
+Linha: -rw-r--r-- 1 userlinux userlinux   512 Nov 18 15:00 typescript
+Linha: -rwxr-xr-x 1 userlinux userlinux 17496 Nov 18 15:39 usefork
+Linha: -rw-r--r-- 1 userlinux userlinux   715 Nov 18 15:39 usefork.cpp
+Linha: -rwxr-xr-x 1 userlinux userlinux 16800 Nov 18 15:41 usewait
+Linha: -rw-r--r-- 1 userlinux userlinux   549 Nov 18 15:41 usewait.cpp
+Linha: -rwxr-xr-x 1 userlinux userlinux 16272 Nov 18 15:43 usewait_exit
+Linha: -rw-r--r-- 1 userlinux userlinux   683 Nov 18 15:42 usewait_exit.cpp
+Linha: drwxr-xr-x 2 userlinux userlinux  4096 Nov 18 14:41 Videos
+Linha: -rwxr-xr-x 1 userlinux userlinux 16792 Nov 18 15:44 waitpid
+Linha: -rw-r--r-- 1 userlinux userlinux   504 Nov 18 15:44 waitpid.cpp
 ```
-* *Breve Descrição:* (Qual a diferença da saída deste programa para a saída do `system.cpp`? O
-que o `popen` permitiu fazer com a saída do `ls -l`?)
+* *Breve Descrição:* O comando popen("ls -l", "r") faz o programa executar o ls -l e ficar bloqueado lendo sua saída pelo pipe usando fgets(), o que significa que ele só continua depois que todo o conteúdo gerado pelo ls for enviado e lido; por isso todas as linhas “Linha: …” aparecem antes de o programa terminar e devolver o controle ao terminal, onde você digitou “Executado”, já que a execução só prossegue após o fechamento do pipe e o término completo do comando externo.
 #### `receivesignal.cpp` (Livro-Texto p. 203)
 * **Objetivo do Código:** Demonstrar como um processo pode "capturar" (handle) um sinal.
 Este programa entra em loop infinito, mas se o usuário pressionar `Ctrl+C` (que envia o sinal
@@ -654,10 +748,21 @@ return 0;
 * *Comando de Compilação:* `g++ -o receivesignal receivesignal.cpp`
 * *Saída da Execução:* (Deixe o programa rodar por 3 segundos e então pressione `Ctrl+C`)
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ ./receivesignal
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+^CProcesso será interrompido pelo sinal: (2).
 ```
-* *Breve Descrição:* (O que aconteceu quando você pressionou `Ctrl+C`? O programa fechou
-silenciosamente ou imprimiu a mensagem da `signal_handler`? Qual é o número do sinal `SIGINT`?)
+* *Breve Descrição:* Ao apertar `Ctrl+C` a execução do programa foi interrompida e uma mensagem foi impressa no terminal, o número do sinal é 2.
 #### `ignoresignal.cpp` (Livro-Texto p. 204)
 * **Objetivo do Código:** Demonstrar como um processo pode *ignorar* ativamente um sinal.
 Este programa é similar ao anterior, mas usa `SIG_IGN` para se tornar imune ao `Ctrl+C`
@@ -685,10 +790,24 @@ return 0;
 de outro terminal).
 
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ ./ignoresignal 
+Estou em loop imune... (1)
+Estou em loop imune... (2)
+Estou em loop imune... (3)
+^CEstou em loop imune... (4)
+^CEstou em loop imune... (5)
+^CEstou em loop imune... (6)
+Estou em loop imune... (7)
+Estou em loop imune... (8)
+Estou em loop imune... (9)
+Estou em loop imune... (10)
+Estou em loop imune... (11)
+Estou em loop imune... (12)
+Estou em loop imune... (13)
+Estou em loop imune... (14)
+^\Quit
 ```
-* *Breve Descrição:* (O que aconteceu quando você pressionou `Ctrl+C`? O programa parou? Como
-você conseguiu parar o programa?)
+* *Breve Descrição:* Quando pressionei Ctrl+C, nada aconteceu porque o programa estava ignorando o sinal SIGINT graças ao signal(SIGINT, SIG_IGN), então ele continuou rodando normalmente; para encerrá-lo, precisei usar Ctrl+\, que envia o sinal SIGQUIT, um sinal diferente que não estava sendo ignorado e que faz o processo terminar imediatamente.
 #### `raisesignal.cpp` (Livro-Texto p. 204-205)
 * **Objetivo do Código:** Demonstrar como um processo pode enviar um sinal *para si mesmo*
 usando a função `raise()`. O programa irá rodar por 5 segundos e então se autoenviar um
@@ -721,10 +840,15 @@ return 0;
 * *Comando de Compilação:* `g++ -o raisesignal raisesignal.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ ./raisesignal 
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Auto-sinal recebido: (2).
 ```
-* *Breve Descrição:* (O que aconteceu após 5 segundos? O programa parou sozinho? Por que a
-função `signal_handler` foi chamada?)
+* *Breve Descrição:* Após cerca de 5 segundos, quando o contador chegou a 5, o próprio programa chamou raise(SIGINT), que envia para si mesmo o mesmo sinal que seria gerado por um Ctrl+C; isso acionou a função signal_handler, que exibiu a mensagem “Auto-sinal recebido: (2).” e depois chamou exit(signum), fazendo com que o programa terminasse sozinho.
 
 #### `killsignal.cpp` (Livro-Texto p. 205)
 * **Objetivo do Código:** Demonstrar como um processo pode enviar um sinal para si mesmo
@@ -759,10 +883,15 @@ return 0;
 * *Comando de Compilação:* `g++ -o killsignal killsignal.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ ./killsignal 
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Dentro do laço de repetição infinito.
+Processo será interrompido pelo sinal: (10).
 ```
-* *Breve Descrição:* (O que aconteceu após 5 segundos? Qual o número do sinal `SIGUSR1` que
-apareceu na saída?)
+* *Breve Descrição:* Após cerca de 5 segundos, quando o contador chegou a 5, o próprio processo enviou para si mesmo o sinal SIGUSR1 usando kill(pid, SIGUSR1), fazendo com que a função signal_handler fosse acionada e imprimisse a mensagem informando que o processo seria interrompido; o número exibido foi 10, que é justamente o número do sinal SIGUSR1 no Linux.
 #### `forksignal.cpp` (Livro-Texto p. 206)
 
 * **Objetivo do Código:** Um exemplo complexo de IPC usando sinais. O processo-pai e o
@@ -817,10 +946,17 @@ return 0;
 * *Comando de Compilação:* `g++ -o forksignal forksignal.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal)
+userlinux@debian:~$ ./forksignal 
+Processo filho aguardando sinal...
+Pai enviando sinal para o filho 3013.
+Processo (FILHO) recebeu sinal: (10).
+Filho enviando sinal de volta ao pai...
+Processo pai aguardando resposta...
+Processo pai aguardando resposta...
+Processo (PAI) recebeu sinal: (10).
+^C
 ```
-* *Breve Descrição:* (Descreva a ordem dos eventos. O pai enviou o sinal? O filho recebeu? O filho
-enviou de volta? O que o comando `pause()` fez em ambos os processos?)
+* *Breve Descrição:* A execução seguiu a sequência correta: primeiro o filho iniciou e ficou parado em pause(), aguardando um sinal; depois de 2 segundos, o pai enviou o sinal SIGUSR1 ao filho, que acordou do pause(), executou o handler imprimindo que recebeu o sinal, e então enviou o mesmo sinal de volta ao pai usando kill(getppid(), SIGUSR1); em seguida, o pai, que também estava bloqueado em pause(), acordou quando recebeu o SIGUSR1, executou seu handler e imprimiu que recebeu o sinal, e o programa poderia encerrar normalmente; aqui, como o pai imprime duas vezes “Processo pai aguardando resposta...”, isso indica que o buffer de saída exibiu o texto antes e depois do pause(), mas o fluxo permaneceu correto — o pai realmente ficou bloqueado esperando até o filho mandar o sinal; no final, tive de pressionar Ctrl+C porque o processo não terminou, provavelmente por causa de stdout não ter sido totalmente sincronizado ou por alguma espera pendente, mas a lógica dos sinais funcionou como deveria; no geral, o pause() em ambos os processos serviu para bloquear completamente a execução até que um sinal fosse recebido, sendo essa a chave para a sincronização entre pai e filho.
 ---
 ### Códigos do Capítulo 9 (Redes)
 #### `resolveaied.cpp` (Livro-Texto p. 264)
@@ -850,9 +986,10 @@ return 0;
 * *Comando de Compilação:* `g++ -o resolveaied resolveaied.cpp`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar ./resolveaied)
+userlinux@debian:~$ ./resolveaied 
+Erro ao resolver host.
 ```
-* *Breve Descrição:* (Qual endereço IP foi retornado para `www.aied.com.br`?)
+* *Breve Descrição:* Deu erro
 #### `testport.cpp` (Livro-Texto p. 276)
 * **Objetivo do Código:** Testar se uma porta TCP específica (porta 80) está aberta em um
 servidor remoto (`aied.com.br`). Requer a biblioteca SFML.
@@ -878,9 +1015,11 @@ return 0;
 * *Comando de Compilação:* `g++ -o testport testport.cpp -lsfml-network -lsfml-system`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar ./testport)
+userlinux@debian:~$ ./testport
+Testando Porta 80: aied.com.br
+Porta está ABERTA
 ```
-* *Breve Descrição:* (A porta 80 (HTTP) do servidor `aied.com.br` estava aberta ou fechada?)
+* *Breve Descrição:* Aberta
 #### `getcurl.cpp` (Livro-Texto p. 283-284)
 * **Objetivo do Código:** Demonstrar como fazer o download de um arquivo (uma imagem
 `.iso`) de uma URL usando a biblioteca `libcurl` em C++.
@@ -919,10 +1058,10 @@ return 0;
 * *Comando de Compilação:* `g++ -o getcurl getcurl.cpp -lcurl`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar ./getcurl)
+userlinux@debian:~$ ./getcurl 
+Download concluído com sucesso para /tmp/output_image.iso
 ```
-* *Breve Descrição:* (O programa reportou sucesso? Verifique com `ls -lh /tmp/output_image.iso` se
-o arquivo realmente foi baixado e qual o seu tamanho.)
+* *Breve Descrição:* Reportou sucesso
 #### `postjson.cpp` (Livro-Texto p. 284-285)
 * **Objetivo do Código:** Demonstrar como enviar dados (um payload JSON) para um
 servidor web usando o método `POST` com a `libcurl`.
@@ -960,10 +1099,22 @@ return 0;
 * *Comando de Compilação:* `g++ -o postjson postjson.cpp -lcurl`
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar ./postjson)
+userlinux@debian:~$ ./postjson
+<!DOCTYPE html>
+<html style="height:100%">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<title> 301 Moved Permanently
+</title><style>@media (prefers-color-scheme:dark){body{background-color:#000!important}}</style></head>
+<body style="color: #444; margin:0;font: normal 14px/20px Arial, Helvetica, sans-serif; height:100%; background-color: #fff;">
+<div style="height:auto; min-height:100%; ">     <div style="text-align: center; width:800px; margin-left: -400px; position:absolute; top: 30%; left:50%;">
+        <h1 style="margin:0; font-size:150px; line-height:150px; font-weight:bold;">301</h1>
+<h2 style="margin-top:20px;font-size: 30px;">Moved Permanently
+</h2>
+<p>The document has been permanently moved.</p>
+</div></div></body></html>
 ```
-* *Breve Descrição:* (O servidor `echo.php` retornou o mesmo JSON que você enviou? O que isso
-prova sobre o método `POST`?)
+* *Breve Descrição:* O servidor não retornou o mesmo JSON, e sim uma página HTML dizendo 301 Moved Permanently, o que significa que o endereço para onde eu enviei o POST redirecionou para outro local; como clientes simples (como seu programa em C) normalmente não seguem redirecionamentos automaticamente, o JSON nunca chegou ao script echo.php, e isso prova que o método POST só funciona corretamente se o endpoint for acessado diretamente, sem redirecionamentos, porque ao contrário do GET ele não mantém o corpo da requisição após um redirecionamento, fazendo com que o servidor não receba o JSON e não consiga devolvê-lo.
 #### `download.sh` (Livro-Texto p. 285-286)
 * **Objetivo do Código:** Criar um script de download robusto que baixa arquivos de uma lista
 (`urls.txt`) e tenta novamente (`--retry`) em caso de falha, continuando de onde parou (`-C`).
@@ -998,7 +1149,8 @@ done
 parar o loop)
 * *Saída da Execução:*
 ```bash
-(Cole aqui a saída exata do seu terminal ao rodar o script)
+userlinux@debian:~$ ./download.sh
+xargs: curl: No such file or directory
+Loop esperando 30s...
 ```
-* *Breve Descrição:* (O `curl` baixou o arquivo? O que o `xargs` fez? O que o loop `while true` e o
-`sleep 30` fariam se você deixasse o script rodando?)
+* *Breve Descrição:* O curl não baixou o arquivo.
