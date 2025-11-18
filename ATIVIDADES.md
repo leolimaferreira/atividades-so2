@@ -12,70 +12,165 @@ sala, conforme solicitado no final de cada capítulo do livro-texto.
 texto dos comandos de validação solicitados. **Não use imagens (printscreens)**.
 ### Capítulo 6: Práticas de Discos e Montagem
 #### Prática 8b65b431 01 (Livro-Texto p. 171)
-* **Resumo da Prática:** (Descreva brevemente o que você fez: adição do disco,
-particionamento com `fdisk`, formatação com `mkfs.ext4` e configuração da montagem
-automática no `/etc/fstab` para o diretório `/backup`).
+* **Resumo da Prática:** Esta prática consiste em adicionar um disco virtual à máquina através do VirtualBox, criar uma partição primária neste novo disco utilizando ferramentas como fdisk, formatar a partição criada com o sistema de arquivos ext4 através do comando mkfs.ext4, editar o arquivo /etc/fstab com privilégios de superusuário usando sudo nano para configurar a montagem automática da partição no diretório /backup durante a inicialização do sistema, e por fim reiniciar a máquina virtual para validar que as configurações foram aplicadas corretamente e que o disco é montado automaticamente no boot do GNU/Linux.
 * **Evidência de Validação:**
 ```bash
 # Saída do comando 'cat /etc/fstab'
-(Cole aqui a saída do seu 'cat /etc/fstab')
+userlinux@debian:~$ cat /etc/fstab
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# systemd generates mount units based on this file, see systemd.mount(5).
+# Please run 'systemctl daemon-reload' after making changes here.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda1 during installation
+UUID=f910ba9d-673d-4f51-9b6b-ad795eb12944 /               ext4    errors=remount-ro 0       1
+# swap was on /dev/sda5 during installation
+UUID=e48062ed-95c0-4a49-ab67-455c652abba9 none            swap    sw              0       0
+/dev/sr0        /media/cdrom0   udf,iso9660 user,noauto     0       0
+UUID=fe805236-dfce-4490-8ecc-61050b343fd5 /backup ext4 defaults 0 2
+
 # Saída do comando 'df -h'
-(Cole aqui a saída do seu 'df -h' mostrando o /backup montado)
+userlinux@debian:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+udev            2.9G     0  2.9G   0% /dev
+tmpfs           594M  1.2M  593M   1% /run
+/dev/sda1       6.9G  6.3G  201M  97% /
+tmpfs           2.9G     0  2.9G   0% /dev/shm
+tmpfs           5.0M  8.0K  5.0M   1% /run/lock
+/dev/sdb1       7.8G   24K  7.4G   1% /backup
+tmpfs           594M  128K  594M   1% /run/user/1000
 ```
 #### Prática 8b65b431 02 (Livro-Texto p. 172)
-* **Resumo da Prática:** (Descreva brevemente o que você fez: criação do diretório `cdrom` e
-montagem manual do dispositivo `/dev/sr0` nele).
+* **Resumo da Prática:** Esta prática consiste em fazer o download de um arquivo de imagem ISO fornecido através de um link do Google Drive, configurar o VirtualBox para carregar esta imagem no drive de CD-ROM virtual da máquina, criar manualmente o diretório /home/userlinux/cdrom que servirá como ponto de montagem, e então utilizar o comando mount para montar o dispositivo de CD-ROM /dev/sr0 neste diretório criado, permitindo assim o acesso ao conteúdo da imagem ISO através do sistema de arquivos Linux, onde o aluno poderá visualizar e manipular os arquivos contidos no CD virtual montado.
 
 * **Evidência de Validação:**
 ```bash
-# Saída do comando 'df -h'
-(Cole aqui a saída do seu 'df -h' mostrando o /dev/sr0 montado)
-# Saída do comando 'cat /home/usuario/cdrom/arquivo.txt'
-(Cole aqui a saída do cat, que deve ser "AIED VIVO")
+userlinux@debian:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+udev            2.9G     0  2.9G   0% /dev
+tmpfs           594M  1.2M  593M   1% /run
+/dev/sda1       6.9G  6.3G  200M  97% /
+tmpfs           2.9G     0  2.9G   0% /dev/shm
+tmpfs           5.0M  8.0K  5.0M   1% /run/lock
+/dev/sdb1       7.8G   24K  7.4G   1% /backup
+tmpfs           594M  124K  594M   1% /run/user/1000
+/dev/sr1         62M   62M     0 100% /media/userlinux/VBox_GAs_6.1.50
+/dev/sr0        364K  364K     0 100% /home/userlinux/cdrom
+
+userlinux@debian:~$ cat /home/userlinux/cdrom/arquivo.txt
+aiedonline
 ```
 ### Capítulo 7: Práticas de Processos
 #### Prática prc0001 01 (Livro-Texto p. 233)
-* **Resumo da Prática:** (Descreva brevemente o que você fez: execução dos comandos
-`locale-gen`, `script`, a listagem de processos com `ps` e a filtragem por `python`).
+* **Resumo da Prática:** Esta prática consiste em navegar para o diretório home do usuário com o comando cd ~/, executar o comando sudo locale-gen "en_US.UTF-8" para gerar as configurações de localização em inglês americano UTF-8, iniciar a gravação da sessão do terminal usando o comando script que registra todas as entradas e saídas subsequentes em um arquivo chamado typescript, utilizar o comando ps aux combinado com grep python para listar todos os processos do sistema e filtrar apenas aqueles relacionados ao interpretador Python, e finalmente encerrar a gravação da sessão com o comando exit, salvando todo o histórico de comandos e suas saídas no arquivo typescript para posterior validação da prática executada.
 * **Evidência de Validação:**
 ```bash
 # Saída do comando 'cat /home/usuario/typescript' (após filtrar por 'python')
-(Cole aqui a saída do seu 'ps aux | grep python' conforme capturado pelo 'typescript')
+userlinux@debian:~$  sudo locale-gen "en_US.UTF-8"
+Generating locales (this might take a while)...
+  en_US.UTF-8... done
+Generation complete.
+userlinux@debian:~$ script
+Script started, output log file is 'typescript'.
+userlinux@debian:~$ ps aux | grep python
+userlin+    2588  0.0  0.0   6340  2164 pts/1    S+   15:00   0:00 grep python
+userlinux@debian:~$ exit
+exit
+Script done.
 ```
 ### Capítulo 9: Práticas de Redes
 #### Prática 0002 checkpoint03 (Livro-Texto p. 286)
-* **Resumo da Prática:** (Descreva brevemente o que você fez: configuração de IP estático
-editando o arquivo `/etc/network/interfaces` e reiniciando a máquina).
+* **Resumo da Prática:** Esta prática consiste em configurar o adaptador de rede da máquina virtual para o modo NAT através das configurações do VirtualBox, iniciar a máquina virtual Debian, editar o arquivo /etc/network/interfaces utilizando privilégios de superusuário (com sudo nano) para configurar manualmente um endereço IP estático 10.0.2.3 com máscara de rede de 24 bits (255.255.255.0), definir o gateway padrão como 10.0.2.2 que permite a comunicação com a rede externa através do NAT do VirtualBox, configurar o servidor DNS como 8.8.8.8 do Google para resolução de nomes de domínio, e finalmente reiniciar a máquina virtual com o comando reboot para que as alterações de configuração de rede sejam aplicadas e a interface de rede passe a utilizar o IP estático configurado em vez de obter configurações automaticamente via DHCP.
 * **Evidência de Validação:**
 ```bash
 # Saída do comando 'ip address show enp0s3'
-(Cole aqui a saída do 'ip address' mostrando o IP 10.0.2.3)
-# Saída do comando 'ip route'
-(Cole aqui a saída do 'ip route' mostrando o gateway 10.0.2.2)
-# Saída do comando 'cat /etc/network/interfaces'
-(Cole aqui o conteúdo do seu arquivo /etc/network/interfaces)
-```
-#### Prática 0002 checkpoint04 (Livro-Texto p. 287)
-* **Resumo da Prática:** (Descreva brevemente o que você fez: configuração da rede para
-DHCP no arquivo e, em seguida, configuração de IP estático via comandos `ip address` e `ip
-route`).
-* **Evidência de Validação:**
-```bash
-# Saída do comando 'ip address show enp0s3'
-(Cole aqui a saída do 'ip address' mostrando o IP 10.0.2.3)
+userlinux@debian:~$ ip addres
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:33:92:eb brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.3/24 brd 10.0.2.255 scope global enp0s3
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a00:27ff:fe33:92eb/64 scope link 
+       valid_lft forever preferred_lft forever
 
 # Saída do comando 'ip route'
-(Cole aqui a saída do 'ip route' mostrando o gateway 10.0.2.2)
+userlinux@debian:~$ ip route
+default via 10.0.2.2 dev enp0s3 onlink 
+10.0.2.0/24 dev enp0s3 proto kernel scope link src 10.0.2.3 
+
 # Saída do comando 'cat /etc/network/interfaces'
-(Cole aqui o conteúdo do seu /etc/network/interfaces mostrando a configuração DHCP)
+userlinux@debian:~$ cat /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto enp0s3
+iface enp0s3 inet static
+    address 10.0.2.3
+    netmask 255.255.255.0
+    gateway 10.0.2.2
+    dns-nameservers 8.8.8.8
+```
+#### Prática 0002 checkpoint04 (Livro-Texto p. 287)
+* **Resumo da Prática:** Esta prática consiste em configurar o adaptador de rede da máquina virtual para o modo NAT através do VirtualBox, iniciar a máquina virtual, editar o arquivo /etc/network/interfaces removendo todas as configurações estáticas da interface enp0s3 (address, netmask, network, broadcast, gateway e dns-nameservers) e configurá-la para obter IP automaticamente via DHCP alterando a linha para iface enp0s3 inet dhcp, reiniciar a máquina virtual para aplicar as configurações DHCP, e então configurar manualmente um IP estático através de comandos do sistema utilizando ip address add 10.0.2.3/24 dev enp0s3 para definir o endereço IP com máscara de 24 bits, ip route add default via 10.0.2.2 para configurar o gateway padrão, e editar o arquivo /etc/resolv.conf adicionando nameserver 8.8.8.8 para configurar o servidor DNS do Google, demonstrando assim duas formas diferentes de configuração de rede: persistente através do arquivo de interfaces e temporária através de comandos diretos que são perdidos após reinicialização.
+* **Evidência de Validação:**
+```bash
+# Saída do comando 'ip address show enp0s3'
+userlinux@debian:~$ ip address show enp0s3
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:33:92:eb brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.3/24 scope global enp0s3
+       valid_lft forever preferred_lft forever
+
+# Saída do comando 'ip route'
+userlinux@debian:~$ ip route
+default via 10.0.2.2 dev enp0s3 
+10.0.2.0/24 dev enp0s3 proto kernel scope link src 10.0.2.3 
+
+# Saída do comando 'cat /etc/network/interfaces'
+userlinux@debian:~$ cat /etc/network/interfaces
+allow-hotplug enp0s3
+iface enp0s3 inet dhcp
 ```
 #### Prática 0002 checkpoint05 (Livro-Texto p. 288)
-* **Resumo da Prática:** (Descreva brevemente o que você fez: download de um arquivo
-usando `wget` para o diretório `/tmp`).
+* **Resumo da Prática:** Esta prática consiste em utilizar o comando wget para fazer o download de um arquivo Python a partir de uma URL específica (http://www.aied.com.br/linux/download/install.py) disponibilizada no servidor do AIED, salvando este arquivo no diretório temporário do sistema /tmp com o nome install.py, utilizando a opção -O (output) do wget para especificar o caminho completo de destino /tmp/install.py, permitindo assim que o aluno pratique o download de arquivos via linha de comando e compreenda como o wget funciona para obter recursos da internet e armazená-los em localizações específicas do sistema de arquivos Linux.
 * **Evidência de Validação:**
 ```bash
 # Saída do comando 'cat /tmp/install.py'
-(Cole aqui a saída do cat, que deve ser "aied.com.br")
+userlinux@debian:~$ cat /tmp/install.py
+#!/usr/bin/python3
+import os;
+import sys
+import platform
+machine2bits = {'AMD64': 64, 'x86_64': 64, 'i386': 32, 'x86': 32, 'i686' : 32}
+os_version = machine2bits.get(platform.machine(), None)
+
+os.system("apt update");
+os.system("wget -O /tmp/libjsoncpp1_1.7.4-3_amd64.deb http://ftp.br.debian.org/debian/pool/main/libj/libjsoncpp/libjsoncpp1_1.7.4-3_amd64.deb");
+os.system("dpkg -i /tmp/libjsoncpp1_1.7.4-3_amd64.deb");
+#os.system("apt install libjsoncpp-dev -y");
+os.system("apt install g++ -y");
+os.system("apt install libcurl4-openssl-dev -y");
+os.system("rm -r /etc/aied");
+os.system("rm -r /etc/aied");
+os.system("mkdir /etc/aied");
+os.system("wget -O /tmp/aied.tar.gz http://www.aied.com.br/linux/download/aied_"+ str(os_version) +".tar.gz" );
+os.system("tar -xzvf /tmp/aied.tar.gz -C /etc/aied/");
+#os.system("rm /usr/sbin/aied");
+#os.system("rm /usr/bin/aied.py");
+os.system("ln -s /etc/aied/aied_"+ str(os_version) +" /usr/bin/aied");
+os.system("chmod +x /etc/aied/aied_"+ str ( os_version ) + "   " );
+
+#OK, será usado para isntalacao do aied.com.br
 ```
 
 ---
