@@ -1,8 +1,8 @@
 # Projeto Final - Capítulos 6, 7 e 9
 ## RELATÓRIO DE PRÁTICAS E CÓDIGOS
-**Nome do Aluno:** [Seu Nome Completo]
-**Turno:** [Tarde ou Noite]
-**Data do Último Commit:** [Data de Hoje]
+**Nome do Aluno:** Leonardo Lima Ferreira dos Santos
+**Turno:** Noite
+**Data do Último Commit:** 18/11/2025
 
 ---
 ## ATIVIDADE 1: Relatório das Práticas de Aula
